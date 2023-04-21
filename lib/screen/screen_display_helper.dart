@@ -7,6 +7,12 @@ abstract class ScreenDisplayHelper {
   //   // TODO: implement setScreenLandscape
   // }
 
+  /// 初始化界面展示
+  initDisplaySettings(BuildContext context);
+
+  /// 初始化界面的屏幕方向
+  initScreenRotation(BuildContext context);
+
   /// 设置屏幕为竖屏
   setScreenPortrait(BuildContext context);
 

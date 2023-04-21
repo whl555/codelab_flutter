@@ -34,6 +34,7 @@ class _VocabularyPageState extends State<VocabularyPage> {
   void initState() {
     _playHelper = DefaultPandaDisplayHelper();
     _playHelper.setScreenLandscape(context);
+    _playHelper.hideSystemStatusBar(widget.toString());
     super.initState();
   }
   @override
