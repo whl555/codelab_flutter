@@ -1,3 +1,5 @@
+import 'package:codelab_vocabulary/screen/default_screen_display_helper.dart';
+import 'package:codelab_vocabulary/screen/screen_display_helper.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -25,6 +27,15 @@ class VocabularyPage extends StatefulWidget {
 }
 
 class _VocabularyPageState extends State<VocabularyPage> {
+
+  late ScreenDisplayHelper _playHelper;
+
+  @override
+  void initState() {
+    _playHelper = DefaultPandaDisplayHelper();
+    _playHelper.setScreenLandscape(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +49,7 @@ class _VocabularyPageState extends State<VocabularyPage> {
             bottom: 0,
             child: Image.asset(
               "assets/images/bg_vocabulary.png",
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fill,
             ),
           ),
           Positioned(
