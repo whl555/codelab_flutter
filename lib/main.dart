@@ -1,5 +1,6 @@
 import 'package:codelab_vocabulary/screen/default_screen_display_helper.dart';
 import 'package:codelab_vocabulary/screen/screen_display_helper.dart';
+import 'package:codelab_vocabulary/widget/vocabulary_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -78,25 +79,12 @@ class _VocabularyPageState extends State<VocabularyPage>
                 fit: BoxFit.fill,
               ),
             ),
-            Positioned(
+            const Positioned(
               left: 0,
               right: 0,
               top: 0,
               bottom: 0,
-              child: Image.asset(
-                "assets/images/bg_vocabulary_book_2.png",
-                fit: BoxFit.contain,
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: Image.asset(
-                "assets/images/bg_vocabulary_book_1.png",
-                fit: BoxFit.contain,
-              ),
+              child: VocabularyWidget()
             ),
             Positioned(
                 top: _clickPosition.dy - 20,
