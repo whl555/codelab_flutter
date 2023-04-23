@@ -42,6 +42,7 @@ class _VocabularyPageState extends State<VocabularyPage>
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     _playHelper = DefaultPandaDisplayHelper();
     _clickAnimationController = AnimationController(
         vsync: this,
@@ -57,7 +58,17 @@ class _VocabularyPageState extends State<VocabularyPage>
   @override
   void dispose() {
     _clickAnimationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed) {
+      print("hide system status bar");
+      _vocabularyBloc.add(LoadVocabularyEvent());
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override

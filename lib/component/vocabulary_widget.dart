@@ -57,61 +57,42 @@ class VocabularyWidget extends StatelessWidget {
   }
 }
 
-class VocabularyGradeBarWidget extends StatefulWidget {
+class VocabularyGradeBarWidget extends StatelessWidget {
   VocabularyGradeBarWidget({Key? key}) : super(key: key);
 
-  @override
-  State<VocabularyGradeBarWidget> createState() =>
-      _VocabularyGradeBarWidgetState();
-}
-
-class _VocabularyGradeBarWidgetState extends State<VocabularyGradeBarWidget> {
-  int currentId = 0;
-  List<String> titles = ["一年级", "二年级", "三年级", "四年级", "五年级", "六年级"];
-  List<VocabularyGradeBarTab> tabs = [];
-
-  @override
-  void initState() {
-    int count = 0;
-    for (var element in titles) {
-      final item = VocabularyGradeBarTab(count, element);
-      tabs.add(item);
-      count++;
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VocabularyBloc, VocabularyState>(
         builder: (context, state) {
-      if (state is VocabularyLoadSuccess) {
-        return Row(
-            children: state.currentGrades.map((grade) {
-          return grade.id == state.currentGradeId
-              ? VocabularyGradeActiveWidget(
-                  grade: grade,
-                  selectedGrades: state.selectedGrades[state.currentCategory!],
-                  onTap: () {
-                    BlocProvider.of<VocabularyBloc>(context).add(
-                      GradeClickEvent(gradeId: grade.id),
-                    );
-                  },
-                )
-              : VocabularyGradeWidget(
-                  grade: grade,
-                  selectedGrades: state.selectedGrades[state.currentCategory!],
-                  onTap: () {
-                    BlocProvider.of<VocabularyBloc>(context).add(
-                      GradeClickEvent(gradeId: grade.id),
-                    );
-                  });
-        }).toList());
-      } else {
-        return const SizedBox.shrink();
-      }
-    });
+          if (state is VocabularyLoadSuccess) {
+            return Row(
+                children: state.currentGrades.map((grade) {
+                  return grade.id == state.currentGradeId
+                      ? VocabularyGradeActiveWidget(
+                    grade: grade,
+                    selectedGrades: state.selectedGrades[state.currentCategory!],
+                    onTap: () {
+                      BlocProvider.of<VocabularyBloc>(context).add(
+                        GradeClickEvent(gradeId: grade.id),
+                      );
+                    },
+                  )
+                      : VocabularyGradeWidget(
+                      grade: grade,
+                      selectedGrades: state.selectedGrades[state.currentCategory!],
+                      onTap: () {
+                        BlocProvider.of<VocabularyBloc>(context).add(
+                          GradeClickEvent(gradeId: grade.id),
+                        );
+                      });
+                }).toList());
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
   }
+
 }
 
 class VocabularyGradeActiveWidget extends StatelessWidget {
