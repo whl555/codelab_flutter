@@ -1,8 +1,12 @@
 import 'package:codelab_vocabulary/screen/default_screen_display_helper.dart';
 import 'package:codelab_vocabulary/screen/screen_display_helper.dart';
-import 'package:codelab_vocabulary/widget/vocabulary_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import 'bloc/vocabulary_bloc.dart';
+import 'bloc/vocabulary_event.dart';
+import 'component/vocabulary_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +33,9 @@ class VocabularyPage extends StatefulWidget {
 }
 
 class _VocabularyPageState extends State<VocabularyPage>
-    with WidgetsBindingObserver, TickerProviderStateMixin{
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  late VocabularyBloc _vocabularyBloc;
+
   late ScreenDisplayHelper _playHelper;
   late AnimationController _clickAnimationController;
   Offset _clickPosition = Offset.zero;
@@ -43,6 +49,8 @@ class _VocabularyPageState extends State<VocabularyPage>
     );
     _playHelper.setScreenLandscape(context);
     _playHelper.hideSystemStatusBar(widget.toString());
+
+    _vocabularyBloc = VocabularyBloc();
     super.initState();
   }
 
@@ -54,47 +62,54 @@ class _VocabularyPageState extends State<VocabularyPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Listener(
-        onPointerDown: (details) {
-          setState(() {
-            _clickPosition = details.localPosition;
-          });
-          _clickAnimationController.reset();
-          _clickAnimationController.forward().whenComplete(() {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<VocabularyBloc>(
+          create: (context) => _vocabularyBloc..add(LoadVocabularyEvent()),
+        ),
+      ],
+      child: Scaffold(
+        body: Listener(
+          onPointerDown: (details) {
+            setState(() {
+              _clickPosition = details.localPosition;
+            });
             _clickAnimationController.reset();
-          });
+            _clickAnimationController.forward().whenComplete(() {
+              _clickAnimationController.reset();
+            });
 
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: Image.asset(
-                "assets/images/bg_vocabulary.png",
-                fit: BoxFit.fill,
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Image.asset(
+                  "assets/images/bg_vocabulary.png",
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-            const Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: VocabularyWidget()
-            ),
-            Positioned(
-                top: _clickPosition.dy - 20,
-                left: _clickPosition.dx - 20,
-                child: IgnorePointer(
-                  child: Lottie.asset("assets/lottie/click.json",
-                      width: 60, height: 60, repeat: false, controller: _clickAnimationController
-                  ),
-                ))
-          ],
+              const Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: VocabularyWidget()
+              ),
+              Positioned(
+                  top: _clickPosition.dy - 20,
+                  left: _clickPosition.dx - 20,
+                  child: IgnorePointer(
+                    child: Lottie.asset("assets/lottie/click.json",
+                        width: 60, height: 60, repeat: false, controller: _clickAnimationController
+                    ),
+                  ))
+            ],
+          ),
         ),
       ),
     );
