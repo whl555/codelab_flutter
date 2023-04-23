@@ -1,9 +1,9 @@
 import 'package:codelab_vocabulary/screen/default_screen_display_helper.dart';
 import 'package:codelab_vocabulary/screen/screen_display_helper.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
 import 'bloc/vocabulary_bloc.dart';
 import 'bloc/vocabulary_event.dart';
 import 'component/vocabulary_widget.dart';
@@ -45,8 +45,8 @@ class _VocabularyPageState extends State<VocabularyPage>
     WidgetsBinding.instance.addObserver(this);
     _playHelper = DefaultPandaDisplayHelper();
     _clickAnimationController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 700),
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
     );
     _playHelper.setScreenLandscape(context);
     _playHelper.hideSystemStatusBar(widget.toString());
@@ -64,7 +64,7 @@ class _VocabularyPageState extends State<VocabularyPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed) {
       print("hide system status bar");
       _vocabularyBloc.add(LoadVocabularyEvent());
     }
@@ -89,7 +89,6 @@ class _VocabularyPageState extends State<VocabularyPage>
             _clickAnimationController.forward().whenComplete(() {
               _clickAnimationController.reset();
             });
-
           },
           child: Stack(
             alignment: Alignment.center,
@@ -105,20 +104,36 @@ class _VocabularyPageState extends State<VocabularyPage>
                 ),
               ),
               const Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: VocabularyWidget()
-              ),
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: VocabularyWidget()),
+              Positioned(
+                  left: 24,
+                  top: 16,
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    onLongPress: () {},
+                    child: SvgPicture.asset(
+                      "assets/icons/ic_vocabulary_back.svg",
+                      width: 36,
+                      height: 36,
+                    ),
+                  )),
               Positioned(
                   top: _clickPosition.dy - 20,
                   left: _clickPosition.dx - 20,
                   child: IgnorePointer(
                     child: Lottie.asset("assets/lottie/click.json",
-                        width: 60, height: 60, repeat: false, controller: _clickAnimationController
-                    ),
-                  ))
+                        width: 60,
+                        height: 60,
+                        repeat: false,
+                        controller: _clickAnimationController),
+                  )),
+
             ],
           ),
         ),

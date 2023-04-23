@@ -26,6 +26,10 @@ class VocabularyWidget extends StatelessWidget {
                 "assets/images/bg_vocabulary_book_2.png",
                 fit: BoxFit.contain,
               ),
+              Positioned(
+                child: VocabularyCategoryBarWidget(),
+                left: 0,
+              ),
               Image.asset(
                 "assets/images/bg_vocabulary_book_1.png",
                 fit: BoxFit.contain,
@@ -39,10 +43,21 @@ class VocabularyWidget extends StatelessWidget {
                   heightFactor: 283 / 357,
                   child: BlocBuilder<VocabularyBloc, VocabularyState>(
                     builder: (context, state) {
-                      return Column(
+                      return Stack(
                         children: [
-                          VocabularyGradeBarWidget(),
-                          Expanded(child: CharGridWidget())
+                          Column(
+                            children: [
+                              VocabularyGradeBarWidget(),
+                              Expanded(child: CharGridWidget())
+                            ],
+                          ),
+                          Positioned(
+                              right: 30,
+                              child: Image.asset(
+                                "assets/images/ic_gold_card.png",
+                                width: 44,
+                                height: 44,
+                              ))
                         ],
                       );
                     },
@@ -57,44 +72,74 @@ class VocabularyWidget extends StatelessWidget {
   }
 }
 
+class VocabularyCategoryBarWidget extends StatefulWidget {
+  const VocabularyCategoryBarWidget({Key? key}) : super(key: key);
+
+  @override
+  State<VocabularyCategoryBarWidget> createState() =>
+      _VocabularyCategoryBarWidgetState();
+}
+
+class _VocabularyCategoryBarWidgetState
+    extends State<VocabularyCategoryBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          "assets/images/tab_char.png",
+          width: 50,
+          height: 56,
+        ),
+        Image.asset(
+          "assets/images/tab_word.png",
+          width: 50,
+          height: 56,
+        ),
+      ],
+    );
+  }
+}
+
+/// 年级Tabs
 class VocabularyGradeBarWidget extends StatelessWidget {
   VocabularyGradeBarWidget({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VocabularyBloc, VocabularyState>(
         builder: (context, state) {
-          if (state is VocabularyLoadSuccess) {
-            return Row(
-                children: state.currentGrades.map((grade) {
-                  return grade.id == state.currentGradeId
-                      ? VocabularyGradeActiveWidget(
-                    grade: grade,
-                    selectedGrades: state.selectedGrades[state.currentCategory!],
-                    onTap: () {
-                      BlocProvider.of<VocabularyBloc>(context).add(
-                        GradeClickEvent(gradeId: grade.id),
-                      );
-                    },
-                  )
-                      : VocabularyGradeWidget(
-                      grade: grade,
-                      selectedGrades: state.selectedGrades[state.currentCategory!],
-                      onTap: () {
-                        BlocProvider.of<VocabularyBloc>(context).add(
-                          GradeClickEvent(gradeId: grade.id),
-                        );
-                      });
-                }).toList());
-          } else {
-            return const SizedBox.shrink();
-          }
-        });
+      if (state is VocabularyLoadSuccess) {
+        return Row(
+            children: state.currentGrades.map((grade) {
+          return grade.id == state.currentGradeId
+              ? VocabularyGradeActiveWidget(
+                  grade: grade,
+                  selectedGrades: state.selectedGrades[state.currentCategory!],
+                  onTap: () {
+                    BlocProvider.of<VocabularyBloc>(context).add(
+                      GradeClickEvent(gradeId: grade.id),
+                    );
+                  },
+                )
+              : VocabularyGradeWidget(
+                  grade: grade,
+                  selectedGrades: state.selectedGrades[state.currentCategory!],
+                  onTap: () {
+                    BlocProvider.of<VocabularyBloc>(context).add(
+                      GradeClickEvent(gradeId: grade.id),
+                    );
+                  });
+        }).toList());
+      } else {
+        return const SizedBox.shrink();
+      }
+    });
   }
-
 }
 
+/// 年级Tab
 class VocabularyGradeActiveWidget extends StatelessWidget {
   final VocabularyGradeModel grade;
   final Set<int>? selectedGrades;
@@ -174,6 +219,7 @@ class VocabularyGradeActiveWidget extends StatelessWidget {
   }
 }
 
+/// 年级Tab
 class VocabularyGradeWidget extends StatelessWidget {
   final VocabularyGradeModel grade;
   final Set<int>? selectedGrades;
